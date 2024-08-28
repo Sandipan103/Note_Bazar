@@ -1,11 +1,25 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { TextField, Button, Container, Typography, Box, Modal, Paper } from '@mui/material';
-import axios from 'axios';
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Modal,
+  Paper,
+} from "@mui/material";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const SignupPage = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [otp, setOtp] = useState('');
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -20,25 +34,38 @@ const SignupPage = () => {
     setOtp(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/api/v1/signup', formData);
-      console.log('Signup response:', response.data);
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/sendOtp",
+        formData
+      );
+      console.log("Otp sent : ", response.data);
+      setOtp(response.data.otp);
       setIsOtpSent(true);
       setIsModalOpen(true);
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error("error while otp sending : ", error);
     }
   };
 
   const handleVerifyOtp = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/api/v1/verify-otp', { email: formData.email, otp });
-      console.log('OTP verification response:', response.data);
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/verifyOtp",
+        { email: formData.email, otp }
+      );
+      console.log("OTP verification response:", response.data);
       setIsModalOpen(false);
+      const response2 = await axios.post(
+        "http://localhost:4000/api/v1/signup",
+        formData
+      )
+      console.log("user created successfully : ", response2);
+      navigate('/profile');
     } catch (error) {
-      console.error('OTP verification error:', error);
+      console.error("OTP verification error:", error);
     }
   };
 
@@ -48,7 +75,7 @@ const SignupPage = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Sign Up
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSendOtp}>
           <TextField
             fullWidth
             label="Name"
@@ -92,10 +119,10 @@ const SignupPage = () => {
                 mt: 2,
                 mb: 2,
                 boxShadow: 3,
-                transition: 'all 0.3s ease',
-                '&:hover': {
+                transition: "all 0.3s ease",
+                "&:hover": {
                   boxShadow: 6,
-                  backgroundColor: '#1565C0',
+                  backgroundColor: "#1565C0",
                 },
               }}
             >
@@ -109,10 +136,10 @@ const SignupPage = () => {
         <Paper
           elevation={3}
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             p: 4,
             width: 400,
             boxShadow: 3,
@@ -140,10 +167,10 @@ const SignupPage = () => {
                 mt: 2,
                 mb: 2,
                 boxShadow: 3,
-                transition: 'all 0.3s ease',
-                '&:hover': {
+                transition: "all 0.3s ease",
+                "&:hover": {
                   boxShadow: 6,
-                  backgroundColor: '#1565C0',
+                  backgroundColor: "#1565C0",
                 },
               }}
             >

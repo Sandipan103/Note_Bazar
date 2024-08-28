@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
-import { TextField, Button, Container, Typography, Paper, Box } from '@mui/material';
-import axios from 'axios';
+/* eslint-disable no-unused-vars */
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Paper,
+  Box,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     setFormData({
@@ -16,11 +26,16 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       // Send login request
-      const response = await axios.post('http://localhost:4000/api/v1/login', formData, { withCredentials: true });
-      console.log('Login response:', response.data);
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/login",
+        formData,
+        { withCredentials: true }
+      );
+      console.log("Login response:", response.data);
+      navigate("/profile");
       // Handle success (e.g., redirect user, store token, etc.)
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       // Handle error (e.g., show error message)
     }
   };
@@ -64,10 +79,10 @@ const LoginPage = () => {
                 mt: 2,
                 mb: 2,
                 boxShadow: 3,
-                transition: 'all 0.3s ease',
-                '&:hover': {
+                transition: "all 0.3s ease",
+                "&:hover": {
                   boxShadow: 6,
-                  backgroundColor: '#1565C0',
+                  backgroundColor: "#1565C0",
                 },
               }}
             >
