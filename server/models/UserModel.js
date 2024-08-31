@@ -6,22 +6,27 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  image: {
-    type: String,
-  },
-  contactNo: {
-    type: String,
-  },
   email: {
     type: String,
     required: true,
     trim: true,
+    unique: true,
   },
   password: {
     type: String,
     required: true,
   },
-  token: {
+  profileImage: {
+    type: String,
+  },
+  college: {
+    type: String,
+  },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  feedback: {
     type: String,
   },
 });

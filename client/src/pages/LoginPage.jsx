@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   TextField,
   Button,
@@ -10,9 +10,13 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import { server, AuthContext } from "../context/UserContext.jsx"
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
@@ -25,18 +29,21 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send login request
       const response = await axios.post(
-        "http://localhost:4000/api/v1/login",
+        `${server}/login`,
         formData,
         { withCredentials: true }
       );
+      toast.success(`Logged in`);
+      setIsAuthenticated(true);
+      Cookies.set("tokenf", response.data.token, {
+        expires: 1,
+      });
       console.log("Login response:", response.data);
       navigate("/profile");
-      // Handle success (e.g., redirect user, store token, etc.)
     } catch (error) {
+      toast.error(`Login Failed`);
       console.error("Login error:", error);
-      // Handle error (e.g., show error message)
     }
   };
 

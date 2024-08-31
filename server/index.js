@@ -3,8 +3,10 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import dbConnect from "./config/database.js"; // Note the .js extension
-import testingRoutes from "./routes/testingRoutes.js"; // Note the .js extension
+import dbConnect from "./config/database.js";
+import testingRoutes from "./routes/testingRoutes.js";
+import userRoutes from './routes/userRoutes.js';
+import notesRoutes from "./routes/notesRoutes.js";
 
 // configure environment variables
 dotenv.config();
@@ -31,6 +33,8 @@ dbConnect();
 
 // routing
 app.use("/api/v1", testingRoutes);
+app.use("/api/v1", notesRoutes);
+app.use("/api/v1", userRoutes);
 
 // start server
 app.listen(PORT, () => {
