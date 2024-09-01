@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import ratingSchema from "./RatingModel.js";
+import feedbackSchema from "./FeedbackModel.js";
 
 const notesSchema = new mongoose.Schema({
   title: {
@@ -26,6 +28,8 @@ const notesSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  ratings: [ratingSchema],
+  feedbacks: [feedbackSchema],
 });
 
 export const Notes = mongoose.model("Notes", notesSchema);
