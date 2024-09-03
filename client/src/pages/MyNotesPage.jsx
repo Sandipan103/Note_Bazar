@@ -52,24 +52,49 @@ const MyNotesPage = () => {
   };
 
   const handleSave = async () => {
+    // step-1 : check if any pdf file is uploaded or not
     if (noteDetails.file == null) {
       toast.error("upload a file first");
       return;
     }
-    let imageResponse;
+
+    // upload the pdf in cloudinary
+    let pdfResponse;
     const formData = new FormData();
-    formData.append("imageFile", noteDetails.file);
+    formData.append("pdfFile", noteDetails.file);
     try {
-      imageResponse = await axios.post(`${server}/imageUpload`, formData, {
+      pdfResponse = await axios.post(`${server}/pdfUpload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         timeout: 60000,
       });
-      console.log("Uploaded image URL:", imageResponse.data.uploadData);
+      console.log("Uploaded pdf URL:", pdfResponse.data.uploadData);
     } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error("Error uploading image");
+      console.error("Error uploading pdf:", error);
+      toast.error("Error uploading pdf");
+      return;
+    }
+
+    // create notes and save it in mongoDB
+    try {
+      const response = await axios.post(
+        `${server}/createNotes`,
+        {
+          title: noteDetails.title,
+          description: noteDetails.description,
+          tags: noteDetails.tags.split(",").map((tag) => tag.trim()),
+          content: pdfResponse.data.uploadData, 
+          price: noteDetails.price,
+        },
+        { withCredentials: true }
+      );
+      toast.success(`Note created successfully`);
+
+      setNotes([...notes, response.data.note]);
+    } catch (error) {
+      console.error("Error creating note:", error);
+      toast.error("Error creating note");
     }
 
     setNotes([...notes, noteDetails]);

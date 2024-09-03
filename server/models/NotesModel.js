@@ -28,6 +28,7 @@ const notesSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  tags : [String],
   ratings: [ratingSchema],
   feedbacks: [feedbackSchema],
 });

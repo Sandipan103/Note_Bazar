@@ -1,12 +1,14 @@
 import express from "express";
-import { getNotes, buyNotes, addNote, fileUpload, imageUpload } from "../controller/NotesController.js";
+import { getNotes, buyNotes, addNote, pdfUpload, createNote } from "../controller/NotesController.js";
+import { isAuthenticated } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/notes", getNotes);
 router.post("/notes/buy", buyNotes);
 router.post("/notes", addNote);
-router.post("/fileUpload", fileUpload);
-router.post("/imageUpload", imageUpload);
+router.post("/pdfUpload", pdfUpload);
+router.post("/createNotes", isAuthenticated, createNote);
+
 
 export default router;
