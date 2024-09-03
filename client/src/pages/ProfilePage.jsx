@@ -25,7 +25,7 @@ const ProfilePage = () => {
       // Fetch user details from the backend  
       const response = await axios.get(`${server}/users/${userId}`);
       setUser(response.data.user);
-      console.log("user detail: ", response.data);
+      // console.log("user detail: ", response.data);
     } else {
       toast.error('Please login');
       navigate('/login');

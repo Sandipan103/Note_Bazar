@@ -39,7 +39,7 @@ const LoginPage = () => {
       Cookies.set("tokenf", response.data.token, {
         expires: 1,
       });
-      console.log("Login response:", response.data);
+      // console.log("Login response:", response.data);
       navigate("/profile");
     } catch (error) {
       toast.error(`Login Failed`);

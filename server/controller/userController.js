@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('user id : ', id);
+    // console.log('user id : ', id);
     // Fetch user details from the database
     const user = await User.findById(id).select('-password');
     if (!user) {
@@ -14,7 +14,7 @@ const getUserById = async (req, res) => {
         message: 'User not found',
       });
     }
-    console.log('user : ', user);
+    // console.log('user : ', user);
     
     res.status(200).json({
       success: true,
