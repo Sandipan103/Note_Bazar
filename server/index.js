@@ -4,9 +4,11 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import dbConnect from "./config/database.js";
+import cloudinaryConnect from "./config/cludinary.js";
 import testingRoutes from "./routes/testingRoutes.js";
 import userRoutes from './routes/userRoutes.js';
 import notesRoutes from "./routes/notesRoutes.js";
+import fileUpload from 'express-fileupload';
 
 // configure environment variables
 dotenv.config();
@@ -26,10 +28,16 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
-
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/'
+}));
 
 // connect with db
 dbConnect();
+
+// connect to cludinary
+cloudinaryConnect();
 
 // routing
 app.use("/api/v1", testingRoutes);

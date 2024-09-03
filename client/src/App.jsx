@@ -8,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage";
 import DashboardPage from "./pages/DashboardPage";
 import NotesBuyingPage from "./pages/NotesBuyingPage";
 import { AuthProvider } from "./context/UserContext";
+import MyNotesPage from "./pages/MyNotesPage";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/notes" element={<NotesBuyingPage />} />
+          <Route path="/myNotes" element={<MyNotesPage />} />
         </Routes>
       </Router>
     </AuthProvider>
