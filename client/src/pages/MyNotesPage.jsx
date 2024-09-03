@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -8,9 +8,11 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
+  Card,
+  CardContent,
+  Typography,
+  CardMedia,
+  Grid,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import toast from "react-hot-toast";
@@ -27,6 +29,23 @@ const MyNotesPage = () => {
     file: null,
     price: "",
   });
+
+  const fetchMyNotes = async () => {
+    try {
+      const response = await axios.get(`${server}/fetchMyNotes`, {
+        withCredentials: true,
+      });
+      setNotes(response.data.notes);
+      toast.success("Notes successfully fetched");
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      toast.error("Error fetching notes");
+    }
+  };
+
+  useEffect(() => {
+    fetchMyNotes();
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -52,13 +71,12 @@ const MyNotesPage = () => {
   };
 
   const handleSave = async () => {
-    // step-1 : check if any pdf file is uploaded or not
     if (noteDetails.file == null) {
-      toast.error("upload a file first");
+      toast.error("Upload a file first");
       return;
     }
 
-    // upload the pdf in cloudinary
+    // upload the pdf file to cludinary
     let pdfResponse;
     const formData = new FormData();
     formData.append("pdfFile", noteDetails.file);
@@ -69,35 +87,34 @@ const MyNotesPage = () => {
         },
         timeout: 60000,
       });
-      console.log("Uploaded pdf URL:", pdfResponse.data.uploadData);
+      // console.log("Uploaded pdf URL:", pdfResponse.data.uploadData);
+      toast.success("pdf succesfully uploaded");
     } catch (error) {
       console.error("Error uploading pdf:", error);
       toast.error("Error uploading pdf");
       return;
     }
 
-    // create notes and save it in mongoDB
+    // create the note and save in mongoDB
     try {
       const response = await axios.post(
-        `${server}/createNotes`,
+        `${server}/createNote`,
         {
           title: noteDetails.title,
           description: noteDetails.description,
           tags: noteDetails.tags.split(",").map((tag) => tag.trim()),
-          content: pdfResponse.data.uploadData, 
+          content: pdfResponse.data.uploadData,
           price: noteDetails.price,
         },
         { withCredentials: true }
       );
       toast.success(`Note created successfully`);
-
       setNotes([...notes, response.data.note]);
     } catch (error) {
       console.error("Error creating note:", error);
       toast.error("Error creating note");
     }
 
-    setNotes([...notes, noteDetails]);
     setNoteDetails({
       title: "",
       description: "",
@@ -108,19 +125,54 @@ const MyNotesPage = () => {
     handleClose();
   };
 
+  const getAverageRating = (ratings) => {
+    if (!ratings || ratings.length === 0) return "No ratings yet";
+    const sum = ratings.reduce((total, rating) => total + rating.value, 0);
+    return (sum / ratings.length).toFixed(1);
+  };
+
   return (
     <div>
       <h1>My Notes</h1>
-      <List>
+      <Grid container spacing={3}>
         {notes.map((note, index) => (
-          <ListItem key={index}>
-            <ListItemText
-              primary={note.title}
-              secondary={`Price: $${note.price}`}
-            />
-          </ListItem>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Card
+              variant="outlined"
+              style={{
+                margin: "10px 0",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.05)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
+            >
+              <CardMedia
+                component="img"
+                height="140"
+                image={note.content} // Assuming Cloudinary generates a thumbnail for PDFs
+                alt="PDF Front Page"
+              />
+              <CardContent>
+                <Typography variant="h5">{note.title}</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {note.description}
+                </Typography>
+                <Typography variant="body1">Price: ${note.price}</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Tags: {note.tags.join(", ")}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Average Rating: {getAverageRating(note.ratings)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </List>
+      </Grid>
       <IconButton color="primary" onClick={handleClickOpen}>
         <AddCircleIcon /> Upload New Note
       </IconButton>
