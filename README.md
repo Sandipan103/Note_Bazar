@@ -1,6 +1,6 @@
-# Note_Hub
+# Note_Bazar
 
-**Note_Hub** is a platform where students can buy and sell educational notes. It includes features like a rating and feedback system for notes, email authentication, and secure payment processing.
+**Note_Bazar** is a platform where students can buy and sell educational notes. It includes features like a rating and feedback system for notes, email authentication, and secure payment processing.
 
 ## Features
 
