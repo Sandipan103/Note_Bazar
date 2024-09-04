@@ -1,37 +1,69 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { Card, CardContent, CardMedia, Typography, Button, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, CardActions, Button, Grid, IconButton } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import FeedbackDialog from './FeedbackDialog';
 
-const NoteComponent = ({ note }) => {
-  const { title, description, price } = note;
+const NoteComponent = ({ note, onBuy }) => {
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  const truncatedDescription = description.split('\n').slice(0, 2).join(' ');
+  const getAverageRating = (ratings) => {
+    if (!ratings || ratings.length === 0) return 0;
+    const sum = ratings.reduce((total, rating) => total + rating.value, 0);
+    return (sum / ratings.length).toFixed(1);
+  };
+
+  const handleShowFeedback = () => {
+    setFeedbackOpen(true);
+  };
+
+  const handleCloseFeedback = () => {
+    setFeedbackOpen(false);
+  };
+
+  const averageRating = getAverageRating(note.ratings);
 
   return (
-    <Card sx={{ maxWidth: 345, margin: '20px auto', padding: '20px' }}>
-      <Typography variant="h5" component="div" gutterBottom>
-        {title}
-      </Typography>
-      <CardMedia
-        component="img"
-        height="140"
-        image="/static/images/cards/contemplative-reptile.jpg"
-        alt="Note image"
-      />
+    <Card variant="outlined" sx={{ marginBottom: '20px', boxShadow: 3, '&:hover': { boxShadow: 6 } }}>
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {truncatedDescription}
+        <Typography variant="h5" gutterBottom>{note.title}</Typography>
+        <Typography variant="body2" color="textSecondary">{note.description}</Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ marginTop: 2 }}>
+          Uploaded by: {note.userId.name}
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-          <Button variant="contained" color="primary">
-            Preview
-          </Button>
-          <Button variant="contained" color="secondary">
-            Buy
-          </Button>
-        </Box>
+        <Typography variant="body2" color="textSecondary">
+          Tags: {note.tags.join(', ')}
+        </Typography>
+        <Grid container spacing={1} sx={{ marginTop: 1 }}>
+          {[...Array(5)].map((_, index) => (
+            <Grid item key={index}>
+              {index < averageRating ? <StarIcon color="primary" /> : <StarBorderIcon color="primary" />}
+            </Grid>
+          ))}
+        </Grid>
+        <Button 
+          size="small" 
+          variant="text" 
+          color="primary" 
+          onClick={handleShowFeedback}
+          sx={{ marginTop: 1 }}
+        >
+          Show Feedback
+        </Button>
       </CardContent>
+      <CardActions style={{ justifyContent: 'space-between', padding: '16px' }}>
+        <Typography variant="h6">₹{note.price}</Typography>
+        <Button variant="contained" color="primary" onClick={() => onBuy(note._id)}>
+          Buy Now
+        </Button>
+      </CardActions>
+      <FeedbackDialog
+        open={feedbackOpen}
+        onClose={handleCloseFeedback}
+        feedbacks={note.feedbacks}
+      />
     </Card>
   );
 };

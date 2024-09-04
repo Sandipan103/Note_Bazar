@@ -74,3 +74,13 @@ export const createNote = async (req, res) => {
     res.status(500).json({ success: false, message: "Error creating note" });
   }
 };
+
+export const fetchAllNotes = async (req, res) => {
+  try {
+    const notes = await Notes.find({ userId: { $ne: req.user._id } }).populate('userId', 'name');
+    res.status(200).json({ success: true, notes });
+  } catch (error) {
+    console.error('Error fetching notes:', error);
+    res.status(500).json({ success: false, message: 'Error fetching notes' });
+  }
+};
