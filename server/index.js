@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import dbConnect from "./config/database.js";
 import cloudinaryConnect from "./config/cludinary.js";
-import testingRoutes from "./routes/testingRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import userRoutes from './routes/userRoutes.js';
 import notesRoutes from "./routes/notesRoutes.js";
 import fileUpload from 'express-fileupload';
@@ -40,7 +40,7 @@ dbConnect();
 cloudinaryConnect();
 
 // routing
-app.use("/api/v1", testingRoutes);
+app.use("/api/v1", authRoutes);
 app.use("/api/v1", notesRoutes);
 app.use("/api/v1", userRoutes);
 

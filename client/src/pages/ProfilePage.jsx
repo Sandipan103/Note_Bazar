@@ -65,7 +65,7 @@ const ProfilePage = () => {
       try {
         // Update user details in the backend
         const response = await axios.put(`${server}/users/${userId}`, editableUser);
-        setUser(response.data.user); // Update the state with the saved details
+        setUser(response.data.user);
         setIsEditing(false);
         toast.success('Profile updated successfully');
       } catch (error) {

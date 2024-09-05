@@ -14,15 +14,7 @@ const NoteComponent = ({ note, onBuy }) => {
     const sum = ratings.reduce((total, rating) => total + rating.value, 0);
     return (sum / ratings.length).toFixed(1);
   };
-
-  const handleShowFeedback = () => {
-    setFeedbackOpen(true);
-  };
-
-  const handleCloseFeedback = () => {
-    setFeedbackOpen(false);
-  };
-
+  
   const averageRating = getAverageRating(note.ratings);
 
   return (
@@ -47,7 +39,7 @@ const NoteComponent = ({ note, onBuy }) => {
           size="small" 
           variant="text" 
           color="primary" 
-          onClick={handleShowFeedback}
+          onClick={()=> {setFeedbackOpen(true)}}
           sx={{ marginTop: 1 }}
         >
           Show Feedback
@@ -61,7 +53,7 @@ const NoteComponent = ({ note, onBuy }) => {
       </CardActions>
       <FeedbackDialog
         open={feedbackOpen}
-        onClose={handleCloseFeedback}
+        onClose={()=> {setFeedbackOpen(false)}}
         feedbacks={note.feedbacks}
       />
     </Card>

@@ -29,6 +29,18 @@ const userSchema = new mongoose.Schema({
   feedback: {
     type: String,
   },
+  boughtNotes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Notes",
+    },
+  ],
+  uploadedNotes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Notes",
+    },
+  ],
 });
 
 export const User = mongoose.model("User", userSchema);

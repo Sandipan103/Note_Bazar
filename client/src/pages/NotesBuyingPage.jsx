@@ -24,8 +24,22 @@ const NotesBuyingPage = () => {
     fetchNotes();
   }, []);
 
-  const handleBuy = (noteId) => {
-    console.log(`Buying note with ID: ${noteId}`);
+  const handleBuy = async (noteId) => {
+    try {
+      const response = await axios.post(
+        `${server}/buyNote`,
+        { noteId },
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        console.log(`Successfully bought note with ID: ${noteId}`);
+        // Optionally, you can remove the bought note from the list
+        setNotesForSale(notesForSale.filter(note => note._id !== noteId));
+      }
+    } catch (error) {
+      console.error('Error buying note:', error);
+    }
   };
 
   return (

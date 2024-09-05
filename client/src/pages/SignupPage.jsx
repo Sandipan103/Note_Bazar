@@ -10,6 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import { server, AuthContext } from "../context/UserContext.jsx";
 import axios from "axios";
 
 const SignupPage = () => {
@@ -38,7 +39,7 @@ const SignupPage = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/sendOtp",
+        `${server}/sendOtp`,
         formData
       );
       console.log("Otp sent : ", response.data);
@@ -53,13 +54,13 @@ const SignupPage = () => {
   const handleVerifyOtp = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/verifyOtp",
+        `${server}/verifyOtp`,
         { email: formData.email, otp }
       );
       console.log("OTP verification response:", response.data);
       setIsModalOpen(false);
       const response2 = await axios.post(
-        "http://localhost:4000/api/v1/signup",
+        `${server}/signup`,
         formData
       )
       console.log("user created successfully : ", response2);
