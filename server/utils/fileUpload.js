@@ -16,11 +16,9 @@ export const pdfUpload = async (req, res) => {
 
     // Fetch file
     const pdfFile = req.files.pdfFile;
-    console.log(pdfFile);
 
     // Upload to Cloudinary
     const response = await uploadFileToCloudinary(pdfFile, "StorePdf");
-    console.log(response);
 
     res.status(200).json({
       success: true,
