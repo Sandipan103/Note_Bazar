@@ -130,3 +130,33 @@ export const rateNote = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error updating note rating' });
   }
 };
+
+export const feedbackNote = async (req, res) => {
+  try {
+    const { notesId, feedback } = req.body;
+    const userId = req.user._id;
+
+    let existingFeedback = await Feedback.findOne({ notesId, userId });
+
+    if (existingFeedback) {
+      await Feedback.findByIdAndUpdate(existingFeedback._id, { feedback: feedback });
+    } else {
+      const newFeedback = await Feedback.create({
+        notesId,
+        userId,
+        feedback,
+      });
+    
+      await Notes.findByIdAndUpdate(
+        notesId,
+        { $push: { feedbacks: newFeedback._id } },
+        { new: true }
+      );
+    }
+
+    res.status(200).json({ success: true, message: "Feedback submitted successfully" });
+  } catch (error) {
+    console.error("Error submitting feedback:", error);
+    res.status(500).json({ success: false, message: "Error submitting feedback" });
+  }
+};

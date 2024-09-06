@@ -75,12 +75,16 @@ const MyNotesPage = () => {
       await axios.post(`${server}/feedbackNote`, {
         notesId: selectedNote._id,
         feedback,
-      });
+      }, { withCredentials: true });
+      toast.success('feedback updated');
       fetchBoughtNotes();
       setSelectedNote(null);
       setOpenFeedbackDialog(false);
     } catch (error) {
+      toast.error('feedback not updated');
       console.error("Error submitting feedback:", error);
+    } finally{
+      setFeedback("");
     }
   };
 
