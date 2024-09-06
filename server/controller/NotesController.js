@@ -6,7 +6,7 @@ import { Feedback } from "../models/FeedbackModel.js";
 // fetching all the notes which is uploaded by the logged in user
 export const fetchMyNotes = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.userId;
     const notes = await Notes.find({ userId }).populate("ratings");
 
     res.status(200).json({
@@ -26,7 +26,7 @@ export const fetchMyNotes = async (req, res) => {
 export const createNote = async (req, res) => {
   try {
     const { title, description, content, price, tags } = req.body;
-    const userId = req.user._id;
+    const userId = req.userId;
     const newNote = await Notes.create({
       title,
       description,
@@ -53,11 +53,11 @@ export const createNote = async (req, res) => {
 // the notes uploaded by other user and currently not bought by logged in user
 export const fetchAllNotes = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate("boughtNotes");
+    const user = await User.findById(req.userId).populate("boughtNotes");
     const boughtNotesIds = user.boughtNotes.map((note) => note._id);
 
     const notes = await Notes.find({
-      userId: { $ne: req.user._id },
+      userId: { $ne: req.userId },
       _id: { $nin: boughtNotesIds },
     }).populate("userId", "name");
 
@@ -77,7 +77,7 @@ export const fetchAllNotes = async (req, res) => {
 // fetching all the notes which is baought by the user
 export const fetchBoughtNotes = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.userId;
     const user = await User.findById(userId).populate("boughtNotes");
 
     if (!user) {
@@ -103,7 +103,7 @@ export const fetchBoughtNotes = async (req, res) => {
 // buying a note
 export const buyNote = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.userId;
     const { noteId } = req.body;
 
     const note = await Notes.findById(noteId);
@@ -146,7 +146,7 @@ export const buyNote = async (req, res) => {
 // giving or updating ratings of a notes
 export const rateNote = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.userId;
     const { notesId, rating } = req.body;
     let existingRating = await Rating.findOne({ notesId, userId });
 
@@ -183,7 +183,7 @@ export const rateNote = async (req, res) => {
 export const feedbackNote = async (req, res) => {
   try {
     const { notesId, feedback } = req.body;
-    const userId = req.user._id;
+    const userId = req.userId;
 
     let existingFeedback = await Feedback.findOne({ notesId, userId });
 
