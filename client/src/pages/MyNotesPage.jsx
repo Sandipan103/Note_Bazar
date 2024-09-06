@@ -17,7 +17,6 @@ import {
 import { Rating as MuiRating } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 import { server } from "../context/UserContext.jsx";
 import { useNavigate } from "react-router-dom";
@@ -37,10 +36,11 @@ const MyNotesPage = () => {
       const response = await axios.get(`${server}/fetchBoughtNotes`, {
         withCredentials: true,
       });
-      toast.success("data fetched");
+      toast.success("Data fetched");
       setBoughtNotes(response.data.notes);
+      console.log("notes : ", response.data.notes);
     } catch (error) {
-      toast.error("data not fetched");
+      toast.error("Data not fetched");
       console.error("Error fetching bought notes:", error);
     }
   };
@@ -51,7 +51,7 @@ const MyNotesPage = () => {
 
   const handleSubmitRating = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${server}/rateNote`,
         {
           notesId: selectedNote._id,
@@ -59,33 +59,62 @@ const MyNotesPage = () => {
         },
         { withCredentials: true }
       );
-      console.log("response : ", response);
-      toast.success("rating updated");
-      fetchBoughtNotes();
+      toast.success("Rating updated");
+
+      // Update the state locally without refetching
+      setBoughtNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note._id === selectedNote._id
+            ? {
+                ...note,
+                ratings: [...note.ratings, { rating }],
+              }
+            : note
+        )
+      );
       setSelectedNote(null);
       setOpenRatingDialog(false);
     } catch (error) {
-      toast.error("rating not updated");
+      toast.error("Rating not updated");
       console.error("Error submitting rating:", error.response);
     }
   };
 
   const handleSubmitFeedback = async () => {
     try {
-      await axios.post(`${server}/feedbackNote`, {
-        notesId: selectedNote._id,
-        feedback,
-      }, { withCredentials: true });
-      toast.success('feedback updated');
-      fetchBoughtNotes();
+      await axios.post(
+        `${server}/feedbackNote`,
+        {
+          notesId: selectedNote._id,
+          feedback,
+        },
+        { withCredentials: true }
+      );
+      toast.success("Feedback updated");
+
+      // Update the state locally without refetching
+      setBoughtNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note._id === selectedNote._id
+            ? {
+                ...note,
+                feedbacks: [...note.feedbacks, feedback],
+              }
+            : note
+        )
+      );
       setSelectedNote(null);
       setOpenFeedbackDialog(false);
     } catch (error) {
-      toast.error('feedback not updated');
+      toast.error("Feedback not updated");
       console.error("Error submitting feedback:", error);
-    } finally{
+    } finally {
       setFeedback("");
     }
+  };
+
+  const handleReadNote = (note) => {
+    window.open(note.content, "_blank");
   };
 
   return (
@@ -112,9 +141,17 @@ const MyNotesPage = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  onClick={() => handleReadNote(note)}
+                >
+                  Read
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
                   onClick={() => {
                     setSelectedNote(note);
                     setOpenRatingDialog(true);
+                    setRating(0);
                   }}
                 >
                   Rate
@@ -161,7 +198,6 @@ const MyNotesPage = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Feedback Dialog */}
       <Dialog
         open={openFeedbackDialog}
         onClose={() => setOpenFeedbackDialog(false)}

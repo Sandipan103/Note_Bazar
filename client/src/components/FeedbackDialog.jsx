@@ -13,8 +13,8 @@ const FeedbackDialog = ({ open, onClose, feedbacks }) => {
             {feedbacks.map((feedback, index) => (
               <ListItem key={index} divider>
                 <ListItemText
-                  primary={feedback.user.name}
-                  secondary={feedback.comment}
+                  primary={feedback.userId.name}
+                  secondary={feedback.feedback}
                 />
                 <Typography variant="body2" color="textSecondary">
                   {feedback.date ? new Date(feedback.date).toLocaleDateString() : 'Unknown date'}

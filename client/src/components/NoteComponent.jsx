@@ -11,10 +11,10 @@ const NoteComponent = ({ note, onBuy }) => {
 
   const getAverageRating = (ratings) => {
     if (!ratings || ratings.length === 0) return 0;
-    const sum = ratings.reduce((total, rating) => total + rating.value, 0);
-    return (sum / ratings.length).toFixed(1);
+    const sum = ratings.reduce((total, rating) => total + rating.rating, 0);
+    return sum / ratings.length;
   };
-  
+
   const averageRating = getAverageRating(note.ratings);
 
   return (
@@ -31,7 +31,7 @@ const NoteComponent = ({ note, onBuy }) => {
         <Grid container spacing={1} sx={{ marginTop: 1 }}>
           {[...Array(5)].map((_, index) => (
             <Grid item key={index}>
-              {index < averageRating ? <StarIcon color="primary" /> : <StarBorderIcon color="primary" />}
+              {index < Math.round(averageRating) ? <StarIcon color="primary" /> : <StarBorderIcon color="primary" />}
             </Grid>
           ))}
         </Grid>

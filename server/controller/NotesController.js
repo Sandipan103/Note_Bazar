@@ -59,7 +59,15 @@ export const fetchAllNotes = async (req, res) => {
     const notes = await Notes.find({
       userId: { $ne: req.userId },
       _id: { $nin: boughtNotesIds },
-    }).populate("userId", "name");
+    }).populate("userId", "name")
+    .populate({
+      path: "ratings",
+      select: "rating",
+    })
+    .populate({
+      path: "feedbacks",
+      populate: { path: "userId", select: "name" }
+    });;
 
     res.status(200).json({
       success: true,
