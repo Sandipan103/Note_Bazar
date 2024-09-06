@@ -5,6 +5,7 @@ import {
   fetchAllNotes,
   fetchBoughtNotes,
   buyNote,
+  rateNote,
 } from "../controller/NotesController.js";
 import { pdfUpload } from "../utils/fileUpload.js";
 import { isAuthenticated } from "../middlewares/authMiddleware.js";
@@ -17,6 +18,7 @@ router.get("/fetchMyNotes", isAuthenticated, fetchMyNotes);
 router.get("/fetchAllNotes", isAuthenticated, fetchAllNotes);
 router.get("/fetchBoughtNotes", isAuthenticated, fetchBoughtNotes);
 router.post('/buyNote', isAuthenticated, buyNote);
+router.post('/rateNote', isAuthenticated, rateNote);
 
 
 export default router;

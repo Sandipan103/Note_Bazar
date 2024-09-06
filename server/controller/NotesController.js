@@ -1,5 +1,7 @@
 import { Notes } from "../models/NotesModel.js";
 import { User } from "../models/UserModel.js";
+import { Rating } from "../models/RatingModel.js";
+import { Feedback } from "../models/FeedbackModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
 
@@ -98,5 +100,33 @@ export const buyNote = async (req, res) => {
   } catch (error) {
     console.error('Error purchasing note:', error);
     res.status(500).json({ success: false, message: 'Error purchasing note' });
+  }
+};
+
+export const rateNote = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const {notesId, rating} = req.body;
+    let existingRating = await Rating.findOne({ notesId, userId });
+
+    if (existingRating) {
+      await Rating.findByIdAndUpdate(existingRating._id, { rating: rating });
+    } else {
+      const newRating = await Rating.create({
+        notesId: notesId,
+        userId: userId,
+        rating: rating,
+      });
+      await Notes.findByIdAndUpdate(
+        notesId,
+        { $push: { ratings: newRating._id } },
+        { new: true }
+      );
+    }
+
+    res.status(200).json({ success: true, message: "Note rating updated successfully" });
+  } catch (error) {
+    console.error('Error updating note rating:', error);
+    res.status(500).json({ success: false, message: 'Error updating note rating' });
   }
 };

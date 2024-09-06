@@ -18,4 +18,3 @@ const feedbackSchema = new mongoose.Schema({
 });
 
 export const Feedback = mongoose.model("Feedback", feedbackSchema);
-export default feedbackSchema;
