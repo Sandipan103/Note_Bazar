@@ -10,11 +10,13 @@ import NotesBuyingPage from "./pages/NotesBuyingPage";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/UserContext";
 import MyNotesPage from "./pages/MyNotesPage";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
     <AuthProvider>
       <Router>
+        <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />

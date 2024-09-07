@@ -1,0 +1,78 @@
+.navbar {
+  background-color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+}
+
+.navbar-title {
+  flex-grow: 1;
+}
+
+.navbar-logo {
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #00ffcc;
+  transition: color 0.3s ease-in-out;
+}
+
+.navbar-logo:hover {
+  color: #ff00cc;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-link {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  margin-left: 1rem;
+  color: #00ffcc;
+  transition: color 0.3s ease-in-out;
+  position: relative;
+}
+
+.navbar-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  left: 0;
+  bottom: -4px;
+  background-color: #ff00cc;
+  transition: width 0.3s ease-in-out;
+}
+
+.navbar-link:hover {
+  color: #ff00cc;
+}
+
+.navbar-link:hover::after {
+  width: 100%;
+}
+
+.navbar-menu-icon {
+  display: none;
+}
+
+.navbar-drawer .MuiPaper-root {
+  background-color: #000000;
+  color: #00ffcc;
+}
+
+.navbar-drawer .MuiListItemText-primary {
+  font-family: "Montserrat", sans-serif;
+  color: #00ffcc;
+}
+
+@media (max-width: 600px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-menu-icon {
+    display: block;
+  }
+}
