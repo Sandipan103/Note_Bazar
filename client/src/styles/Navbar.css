@@ -1,78 +1,85 @@
+.MuiAppBar-root {
+  background-color: #1e1e1e !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+.MuiButton-root {
+  color: #ffca28 !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.MuiButton-root:hover {
+  color: #fff !important;
+  text-shadow: 0 0 10px #ffca28, 0 0 20px #ffca28, 0 0 30px #ffca28 !important;
+  transition: all 0.3s ease !important;
+}
+
+.MuiIconButton-root {
+  color: #ffca28 !important;
+}
+
+.MuiMenu-paper {
+  background-color: #1e1e1e !important;
+  color: #ffca28 !important;
+}
+
+.MuiMenuItem-root {
+  font-family: 'Montserrat', sans-serif !important;
+  color: #ffca28 !important;
+}
+
+.MuiMenuItem-root:hover {
+  background-color: #333 !important;
+}
+
 .navbar {
-  background-color: #000000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  color: #ffffff;
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #333;
 }
 
 .navbar-title {
-  flex-grow: 1;
-}
-
-.navbar-logo {
-  font-family: "Montserrat", sans-serif;
+  color: #ffca28;
   font-weight: bold;
   font-size: 1.5rem;
-  color: #00ffcc;
-  transition: color 0.3s ease-in-out;
+  text-transform: none;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-.navbar-logo:hover {
-  color: #ff00cc;
-}
-
-.navbar-links {
-  display: flex;
-  align-items: center;
+.navbar-title:hover {
+  color: #fff;
+  text-shadow: 0 0 10px #ffca28, 0 0 20px #ffca28, 0 0 30px #ffca28;
 }
 
 .navbar-link {
-  font-family: "Montserrat", sans-serif;
+  color: #ffca28;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   margin-left: 1rem;
-  color: #00ffcc;
-  transition: color 0.3s ease-in-out;
-  position: relative;
-}
-
-.navbar-link::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 2px;
-  left: 0;
-  bottom: -4px;
-  background-color: #ff00cc;
-  transition: width 0.3s ease-in-out;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .navbar-link:hover {
-  color: #ff00cc;
+  color: #fff;
+  text-shadow: 0 0 10px #ffca28, 0 0 20px #ffca28, 0 0 30px #ffca28;
 }
 
-.navbar-link:hover::after {
-  width: 100%;
+.navbar-icon {
+  color: #ffca28;
 }
 
-.navbar-menu-icon {
-  display: none;
+.navbar-menu {
+  background-color: #1e1e1e;
+  color: #ffca28;
 }
 
-.navbar-drawer .MuiPaper-root {
-  background-color: #000000;
-  color: #00ffcc;
+.navbar-menu-item {
+  font-family: 'Montserrat', sans-serif;
+  color: #ffca28;
 }
 
-.navbar-drawer .MuiListItemText-primary {
-  font-family: "Montserrat", sans-serif;
-  color: #00ffcc;
-}
-
-@media (max-width: 600px) {
-  .navbar-links {
-    display: none;
-  }
-
-  .navbar-menu-icon {
-    display: block;
-  }
+.navbar-menu-item:hover {
+  background-color: #333;
 }

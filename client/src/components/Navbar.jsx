@@ -4,14 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AuthContext, server } from "../context/UserContext";
-import axios from 'axios';
+import axios from "axios";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import "../styles/Navbar.css";
 
 const Navbar = () => {
-  const { isAuthenticated, setIsAuthenticated, loading, setLoading } =
-    useContext(AuthContext);
+  const { isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(AuthContext);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -27,7 +26,6 @@ const Navbar = () => {
   const logoutHandler = async () => {
     setLoading(true);
     try {
-      // Assuming a backend endpoint for logging out
       const response = await axios.get(`${server}/logout`, { withCredentials: true });
       console.log(response);
       Cookies.remove("tokenf");
@@ -46,12 +44,20 @@ const Navbar = () => {
   return (
     <AppBar position="static" className="navbar">
       <Toolbar>
-        <Typography variant="h6" component="div" className="navbar-title">
-          <Button color="inherit" component={Link} to="/" className="navbar-logo">
-            NoteHub
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/"
+            className="navbar-title"
+          >
+            Note_Bazar
           </Button>
         </Typography>
-        <div className="navbar-links">
+        <div>
+          <Button color="inherit" component={Link} to="/" className="navbar-link">
+            Home
+          </Button>
           {isAuthenticated ? (
             <>
               <Button color="inherit" component={Link} to="/dashboard" className="navbar-link">
@@ -90,7 +96,7 @@ const Navbar = () => {
           edge="end"
           color="inherit"
           aria-label="menu"
-          className="navbar-menu-icon"
+          className="navbar-icon"
           onClick={handleClick}
         >
           <MenuIcon />
@@ -101,33 +107,37 @@ const Navbar = () => {
           onClose={handleClose}
           className="navbar-menu"
         >
-          <MenuItem onClick={handleClose} component={Link} to="/">
+          <MenuItem onClick={handleClose} component={Link} to="/" className="navbar-menu-item">
             Home
           </MenuItem>
-          {isAuthenticated ? [
-            <MenuItem key="dashboard" onClick={handleClose} component={Link} to="/dashboard">
-              Dashboard
-            </MenuItem>,
-            <MenuItem key="notes" onClick={handleClose} component={Link} to="/notes">
-              Buy Notes
-            </MenuItem>,
-            <MenuItem key="myNotes" onClick={handleClose} component={Link} to="/myNotes">
-              My Notes
-            </MenuItem>,
-            <MenuItem key="profile" onClick={handleClose} component={Link} to="/profile">
-              Profile
-            </MenuItem>,
-            <MenuItem key="logout" onClick={logoutHandler}>
-              Logout
-            </MenuItem>,
-          ] : [
-            <MenuItem key="login" onClick={handleClose} component={Link} to="/login">
-              Login
-            </MenuItem>,
-            <MenuItem key="signup" onClick={handleClose} component={Link} to="/signup">
-              Signup
-            </MenuItem>
-          ]}
+          {isAuthenticated ? (
+            <>
+              <MenuItem onClick={handleClose} component={Link} to="/dashboard" className="navbar-menu-item">
+                Dashboard
+              </MenuItem>
+              <MenuItem onClick={handleClose} component={Link} to="/notes" className="navbar-menu-item">
+                Buy Notes
+              </MenuItem>
+              <MenuItem onClick={handleClose} component={Link} to="/myNotes" className="navbar-menu-item">
+                My Notes
+              </MenuItem>
+              <MenuItem onClick={handleClose} component={Link} to="/profile" className="navbar-menu-item">
+                Profile
+              </MenuItem>
+              <MenuItem onClick={logoutHandler} className="navbar-menu-item">
+                Logout
+              </MenuItem>
+            </>
+          ) : (
+            <>
+              <MenuItem onClick={handleClose} component={Link} to="/login" className="navbar-menu-item">
+                Login
+              </MenuItem>
+              <MenuItem onClick={handleClose} component={Link} to="/signup" className="navbar-menu-item">
+                Signup
+              </MenuItem>
+            </>
+          )}
         </Menu>
       </Toolbar>
     </AppBar>
