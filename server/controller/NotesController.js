@@ -86,7 +86,12 @@ export const fetchAllNotes = async (req, res) => {
 export const fetchBoughtNotes = async (req, res) => {
   try {
     const userId = req.userId;
-    const user = await User.findById(userId).populate("boughtNotes");
+    const user = await User.findById(userId).populate({
+      path: "boughtNotes",
+      populate: {
+        path: "ratings",
+      },
+    });
 
     if (!user) {
       return res.status(404).json({

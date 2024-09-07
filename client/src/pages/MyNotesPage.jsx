@@ -15,8 +15,9 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { Rating as MuiRating } from "@mui/material";
-import axios from "axios";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 import toast from "react-hot-toast";
 import { server } from "../context/UserContext.jsx";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +30,7 @@ const MyNotesPage = () => {
   const [openFeedbackDialog, setOpenFeedbackDialog] = useState(false);
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState("");
+  const [userId, setUserId] = useState(null);
 
   // Fetch notes from the backend
   const fetchBoughtNotes = async () => {
@@ -39,6 +41,12 @@ const MyNotesPage = () => {
       toast.success("Data fetched");
       setBoughtNotes(response.data.notes);
       console.log("notes : ", response.data.notes);
+      const token = Cookies.get("tokenf");
+      if (token) {
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        setUserId(userId);
+      }
     } catch (error) {
       toast.error("Data not fetched");
       console.error("Error fetching bought notes:", error);
@@ -48,6 +56,24 @@ const MyNotesPage = () => {
   useEffect(() => {
     fetchBoughtNotes();
   }, []);
+
+  const handleOpenRatingDialog = (note) => {
+    setSelectedNote(note);
+    const existingRating = note.ratings.find(
+      (r) => r.userId === userId
+    );
+    setRating(existingRating ? existingRating.rating : 0);
+    setOpenRatingDialog(true);
+  };
+
+  const handleOpenFeedbackDialog = (note) => {
+    setSelectedNote(note);
+    const existingFeedback = note.feedbacks.find(
+      (f) => f.userId === userId
+    );
+    setFeedback(existingFeedback ? existingFeedback.feedback : "");
+    setOpenFeedbackDialog(true);
+  };
 
   const handleSubmitRating = async () => {
     try {
@@ -61,13 +87,15 @@ const MyNotesPage = () => {
       );
       toast.success("Rating updated");
 
-      // Update the state locally without refetching
       setBoughtNotes((prevNotes) =>
         prevNotes.map((note) =>
           note._id === selectedNote._id
             ? {
                 ...note,
-                ratings: [...note.ratings, { rating }],
+                ratings: [
+                  ...note.ratings,
+                  { rating, userId: "CURRENT_USER_ID" },
+                ],
               }
             : note
         )
@@ -92,13 +120,15 @@ const MyNotesPage = () => {
       );
       toast.success("Feedback updated");
 
-      // Update the state locally without refetching
       setBoughtNotes((prevNotes) =>
         prevNotes.map((note) =>
           note._id === selectedNote._id
             ? {
                 ...note,
-                feedbacks: [...note.feedbacks, feedback],
+                feedbacks: [
+                  ...note.feedbacks,
+                  { feedback, userId: "CURRENT_USER_ID" },
+                ],
               }
             : note
         )
@@ -148,21 +178,14 @@ const MyNotesPage = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => {
-                    setSelectedNote(note);
-                    setOpenRatingDialog(true);
-                    setRating(0);
-                  }}
+                  onClick={() => handleOpenRatingDialog(note)}
                 >
                   Rate
                 </Button>
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() => {
-                    setSelectedNote(note);
-                    setOpenFeedbackDialog(true);
-                  }}
+                  onClick={() => handleOpenFeedbackDialog(note)}
                 >
                   Feedback
                 </Button>
